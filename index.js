@@ -5,6 +5,7 @@ const { getDatabase } = require("firebase/database");
 const { firebaseConfig, BOT_TOKEN } = require('./config')
 const addSprintName = require('./helpers/addSprintName')
 const showListNames = require('./helpers/showListNames')
+const startVoting = require('./helpers/startVoting')
 
 // Initialize Firebase
 console.log(firebaseConfig)
@@ -36,6 +37,10 @@ bot.command('add', (ctx) => {
 
 bot.command(['show', 'list', 'showList'], (ctx) => {
   showListNames({ ctx, db: database })
+})
+
+bot.command('startVoting', (ctx) => {
+  startVoting({ ctx, db: database })
 })
 
 bot.hears('hi', (ctx) => ctx.reply('Hey there'))
