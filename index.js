@@ -2,8 +2,7 @@
 const { initializeApp } = require('firebase/app');
 const { getDatabase } = require("firebase/database");
 
-const firebaseConfig = require('./config')
-const BOT_TOKEN = require('./token')
+const { firebaseConfig, BOT_TOKEN } = require('./config')
 const addSprintName = require('./helpers/addSprintName')
 const showListNames = require('./helpers/showListNames')
 
