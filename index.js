@@ -1,21 +1,37 @@
+require('dotenv').config()
+
 // Import the functions you need from the SDKs you need
 const { initializeApp } = require('firebase/app');
 const { getDatabase } = require("firebase/database");
 
-const { firebaseConfig, BOT_TOKEN } = require('./config')
 const addSprintName = require('./helpers/addSprintName')
 const showListNames = require('./helpers/showListNames')
 const startVoting = require('./helpers/startVoting')
 
+const { BOT_TOKEN,  FIREBASE_API_KEY } = process.env
+
+console.log(FIREBASE_API_KEY)
+console.log(BOT_TOKEN)
+
 // Initialize Firebase
-console.log(firebaseConfig)
+const firebaseConfig = {
+  apiKey: FIREBASE_API_KEY,
+  authDomain: "sprintnamesbot.firebaseapp.com",
+  databaseURL: "https://sprintnamesbot-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "sprintnamesbot",
+  storageBucket: "sprintnamesbot.appspot.com",
+  messagingSenderId: "920693507915",
+  appId: "1:920693507915:web:2a5aa469840bd3324e0ace",
+  measurementId: "G-NDGBEGHKHZ"
+}
+
 const app = initializeApp(firebaseConfig);
 
 const database = getDatabase(app);
 
 const { Telegraf } = require('telegraf')
 
-const bot = new Telegraf(process.env.BOT_TOKEN || BOT_TOKEN)
+const bot = new Telegraf(BOT_TOKEN)
 
 bot.start((ctx) => ctx.reply('Привет! Это командный бот, для подробностей вызови команду /help'))
 bot.help((ctx) => {
