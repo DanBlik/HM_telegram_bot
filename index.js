@@ -8,7 +8,7 @@ const addSprintName = require('./helpers/addSprintName')
 const showListNames = require('./helpers/showListNames')
 const startVoting = require('./helpers/startVoting')
 
-const { BOT_TOKEN,  FIREBASE_API_KEY, URL } = process.env
+const { BOT_TOKEN, FIREBASE_API_KEY, URL } = process.env
 const PORT = process.env.PORT || 5000
 
 // Initialize Firebase
@@ -59,16 +59,18 @@ bot.command('startVoting', (ctx) => {
 
 bot.hears('hi', (ctx) => ctx.reply('Hey there'))
 
-// bot.telegram.setWebhook(`${URL}/bot-${BOT_TOKEN}`)
 
-// bot.startWebhook(`${URL}/bot-${BOT_TOKEN}`, null, PORT)
+if (process.env.NODE_ENV === 'production') {
+  bot.launch({
+    webhook: {
+      domain: `${URL}/bot-${BOT_TOKEN}`,
+      port: PORT
+    }
+  })
 
-bot.launch({
-  webhook: {
-    domain: `${URL}/bot-${BOT_TOKEN}`,
-    port: PORT
-  }
-})
-// bot.launch()
-//   .then(() => console.log('Bot is running'))
-//   .catch(err => console.log(err))
+  console.log('Started with web hook')
+} else {
+  bot.launch()
+    .then(() => console.log('Bot is running'))
+    .catch(err => console.log(err))
+}
