@@ -59,10 +59,16 @@ bot.command('startVoting', (ctx) => {
 
 bot.hears('hi', (ctx) => ctx.reply('Hey there'))
 
-bot.telegram.setWebhook(`${URL}/bot-${BOT_TOKEN}`)
+// bot.telegram.setWebhook(`${URL}/bot-${BOT_TOKEN}`)
 
-bot.startWebhook(`${URL}/bot-${BOT_TOKEN}`, null, PORT)
+// bot.startWebhook(`${URL}/bot-${BOT_TOKEN}`, null, PORT)
 
+bot.launch({
+  webhook: {
+    domain: `${URL}/bot-${BOT_TOKEN}`,
+    port: PORT
+  }
+})
 // bot.launch()
 //   .then(() => console.log('Bot is running'))
 //   .catch(err => console.log(err))
