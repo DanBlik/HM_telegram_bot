@@ -8,10 +8,8 @@ const addSprintName = require('./helpers/addSprintName')
 const showListNames = require('./helpers/showListNames')
 const startVoting = require('./helpers/startVoting')
 
-const { BOT_TOKEN,  FIREBASE_API_KEY } = process.env
-
-console.log(FIREBASE_API_KEY)
-console.log(BOT_TOKEN)
+const { BOT_TOKEN,  FIREBASE_API_KEY, URL } = process.env
+const PORT = process.env.PORT || 5000
 
 // Initialize Firebase
 const firebaseConfig = {
@@ -61,6 +59,10 @@ bot.command('startVoting', (ctx) => {
 
 bot.hears('hi', (ctx) => ctx.reply('Hey there'))
 
-bot.launch()
-  .then(() => console.log('Bot is running'))
-  .catch(err => console.log(err))
+bot.telegram.setWebhook(`${URL}/bot-${BOT_TOKEN}`)
+
+bot.startWebhook(`${URL}/bot-${BOT_TOKEN}`, null, PORT)
+
+// bot.launch()
+//   .then(() => console.log('Bot is running'))
+//   .catch(err => console.log(err))
