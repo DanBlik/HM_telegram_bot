@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "target": "esnext",
+  "module": "commonjs",
   "scripts": {
     "start": "node index.js"
   },
