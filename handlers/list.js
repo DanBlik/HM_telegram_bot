@@ -5,7 +5,7 @@ const list = async ({ ctx, database }) => {
   console.log(ctx.message)
 
   if (sprintNamesList.length !== 0) {
-    ctx.replyWithHTML(sprintNamesList.map(({ name }) => `<b>${name}</b>`).join('\n'))
+    ctx.replyWithHTML(`Список названий:\n\n${sprintNamesList.map(({ name }) => `<b>${name}</b>`).join('\n')}`)
   }
 }
 

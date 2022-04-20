@@ -6,8 +6,6 @@ const { Telegraf } = require('telegraf');
 
 const read = require('./db/read')
 
-const startPolling = require('./helpers/startPolling')
-
 const getFirebaseConfig = require('./firebase/getFirebaseConfig')
 
 const userAdd = require('./handlers/userAdd')
@@ -16,6 +14,7 @@ const remove = require('./handlers/remove')
 const userRemove = require('./handlers/userRemove')
 const add = require('./handlers/add')
 const list = require('./handlers/list')
+const poll = require('./handlers/poll')
 
 const getBotToken = require('./tokenBot/getBotToken')
 
@@ -30,8 +29,14 @@ const database = getDatabase(app);
 const bot = new Telegraf(getBotToken(process.env))
 
 //обработать изменение сообщений
+bot.on('edited_message', () => {})
+
+// bot.on('poll', (ctx) => {
+
+// })
+
 bot.use((ctx, next) => {
-  if (!ctx.editedMessage && ctx.message?.chat.type === 'private') {
+  if (ctx.message?.chat.type === 'private') {
     next()
   }
 })
@@ -54,7 +59,7 @@ bot.use(async (ctx, next) => {
 
 bot.command('add', async (ctx) => add({ctx, database}))
 
-bot.command('poll', async (ctx) => startPolling({ ctx, db: database }))
+bot.command('poll', async (ctx) => poll({ ctx, db: database }))
 
 /*-------------admin block----------------*/
 
