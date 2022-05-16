@@ -21,7 +21,7 @@ const getBotToken = require('./tokenBot/getBotToken')
 
 const MESSAGES = require('./messages')
 
-const { URL, NODE_ENV } = process.env
+const { URL, NODE_ENV, BOT_TOKEN_PROD } = process.env
 const PORT = process.env.PORT || 5000
 
 const app = initializeApp(getFirebaseConfig(process.env));
@@ -76,7 +76,7 @@ bot.command('remove', async (ctx) => remove({ctx, database}))
 if (NODE_ENV === 'production') {
   bot.launch({
     webhook: {
-      domain: `${URL}/bot-${BOT_TOKEN}`,
+      domain: `${URL}/bot-${BOT_TOKEN_PROD}`,
       port: PORT
     }
   })
