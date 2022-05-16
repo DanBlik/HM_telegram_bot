@@ -1,6 +1,7 @@
 const { ref, set, child, get, push } = require("firebase/database");
 
 const create = async ({ db, item, uniqueFieldName, collectionName }) => {
+  console.log({ db, item, uniqueFieldName, collectionName });
   const dbRef = ref(db)
 
   const isUniq = await get(child(dbRef, collectionName))
@@ -21,6 +22,7 @@ const create = async ({ db, item, uniqueFieldName, collectionName }) => {
   if (isUniq) {
     const postListRef = ref(db, collectionName);
     const newPostRef = push(postListRef);
+    console.log({newPostRef, postListRef});
     set(newPostRef, item)
       .then(() => {
         console.log('Data saved successfully!')

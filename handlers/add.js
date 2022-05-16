@@ -2,7 +2,7 @@ const create = require('../db/create')
 
 const add = async ({ ctx, database }) => {
   const messageText = ctx.message.text
-  const [, name, description] = messageText.split(/\W/g).filter(word => word !== '')
+  const [, name, description = ''] = messageText.split(/\W/g).filter(word => word !== '')
 
   const operationStatus = await create({
     db: database,
