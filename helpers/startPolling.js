@@ -1,6 +1,6 @@
 const read = require('../db/read')
 
-const startPolling = async ({ ctx, db }) => {
+const startPolling = async ({ ctx, db, timer }) => {
   // test chat
   // const chatId = -792421822
   // HM chat
@@ -11,10 +11,10 @@ const startPolling = async ({ ctx, db }) => {
   const options = sprintNames?.map(sprintName => sprintName.name)
   const pollObject = await ctx.telegram.sendPoll(chatId, pollName, options)
   console.log(pollObject)
-  if (timer !== 0 && !Number.isNaN(timer)) {
+  if (!Number.isNaN(timer)) {
     setTimeout(() => {
       ctx.telegram.stopPoll(chatId, pollObject.message_id)
-    }, timer * 1000);
+    }, (timer === 0 ? 5 : timer) * 60 * 1000);
   }
 }
 
