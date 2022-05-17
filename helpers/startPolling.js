@@ -1,11 +1,18 @@
+require('dotenv').config()
 const read = require('../db/read')
 
+const { NODE_ENV } = process.env
+
+const getCurrentChatId = () => {
+  if (NODE_ENV === 'production') {
+    return -1001261652329
+  }
+
+  return -792421822
+}
+
 const startPolling = async ({ ctx, db, timer }) => {
-  // test chat
-  // const chatId = -792421822
-  // HM chat
-  const chatId = -1001261652329
-  // const chatId = ctx.message.chat.id
+  const chatId = getCurrentChatId()
   const pollName = 'Голосуем за название спринта:'
   const sprintNames = await read({ db, collectionName: 'sprintNames' })
   const options = sprintNames?.map(sprintName => sprintName.name)
