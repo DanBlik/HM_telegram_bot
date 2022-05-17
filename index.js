@@ -1,18 +1,14 @@
 require('dotenv').config()
 
-const { initializeApp } = require('firebase/app');
-const { getDatabase } = require("firebase/database");
-const { Telegraf } = require('telegraf');
+const { Telegraf, Scenes: { Stage }, session } = require('telegraf')
+const addSprintNameScene = require('./scenes/addSprintNameScene')
+const userCommandsScene = require('./scenes/userCommandsScene')
+const addUserScene = require('./scenes/addUserScene')
+const removeUserScene = require('./scenes/removeUserScene')
+const removeSprintNameScene = require('./scenes/removeSprintNameScene')
 
 const read = require('./db/read')
 
-const getFirebaseConfig = require('./firebase/getFirebaseConfig')
-
-const userAdd = require('./handlers/userAdd')
-const userList = require('./handlers/userList')
-const remove = require('./handlers/remove')
-const userRemove = require('./handlers/userRemove')
-const add = require('./handlers/add')
 const list = require('./handlers/list')
 const poll = require('./handlers/poll')
 
@@ -20,21 +16,21 @@ const getBotToken = require('./tokenBot/getBotToken')
 
 const MESSAGES = require('./messages')
 
+const database = require('./firebase')
+
 const { URL, NODE_ENV } = process.env
 const PORT = process.env.PORT || 5000
 
-const app = initializeApp(getFirebaseConfig(process.env));
-const database = getDatabase(app);
-
 const bot = new Telegraf(getBotToken(process.env))
 
-//обработать изменение сообщений
-bot.on('edited_message', () => {})
+// обработка события изменения сообщений
+bot.on('edited_message', () => { })
 
 // bot.on('poll', (ctx) => {
 
 // })
 
+// работаем только с личными чатами
 bot.use((ctx, next) => {
   if (ctx.message?.chat.type === 'private') {
     next()
@@ -44,7 +40,15 @@ bot.use((ctx, next) => {
 bot.start((ctx) => ctx.reply(MESSAGES.start))
 bot.help((ctx) => ctx.replyWithHTML(MESSAGES.help.user))
 
-bot.command('list', async (ctx) => list({ctx, database}))
+bot.command('list', async (ctx) => list({ ctx, database }))
+
+bot.command('/add', async (ctx) => {
+  try {
+    await ctx.scene.enter('addSprintNameScene')
+  } catch (e) {
+    console.log('cant add', e)
+  }
+})
 
 /*-------------admin block----------------*/
 
@@ -57,8 +61,6 @@ bot.use(async (ctx, next) => {
   }
 })
 
-bot.command('add', async (ctx) => add({ctx, database}))
-
 bot.command('poll', async (ctx) => poll({ ctx, db: database }))
 
 /*-------------admin block----------------*/
@@ -70,13 +72,31 @@ bot.use((ctx, next) => {
   }
 })
 
-bot.command('userAdd', async (ctx) => userAdd({ctx, database}))
+const stage = new Stage([
+  addSprintNameScene,
+  userCommandsScene,
+  addUserScene,
+  removeUserScene,
+  removeSprintNameScene,
+])
+stage.hears('exit', (ctx) => ctx.scene.leave())
 
-bot.command('userList', async (ctx) => userList({ctx, database}))
+bot.use(session(), stage.middleware())
 
-bot.command('userRemove', async (ctx) => userRemove({ctx, database}))
-
-bot.command('remove', async (ctx) => remove({ctx, database}))
+bot.command('/user', async (ctx) => {
+  try {
+    await ctx.scene.enter('userCommandsScene')
+  } catch (e) {
+    console.log('err in user command', e)
+  }
+})
+bot.command('/remove', async (ctx) => {
+  try {
+    await ctx.scene.enter('removeSprintNameScene')
+  } catch (e) {
+    console.log('cant remove', e)
+  }
+})
 
 if (NODE_ENV === 'production') {
   bot.launch({

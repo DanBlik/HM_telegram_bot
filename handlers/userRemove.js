@@ -1,13 +1,17 @@
-const userRemove = async (ctx) => {
-  const messageText = ctx.message.text
-  const [, username] = messageText.split(/\W/g).filter(word => word !== '')
+const removeFromDb = require('../db/remove')
 
-  await remove({
+const userRemove = async ({ userName, database }) => {
+  // const messageText = ctx.message.text
+  // const [, username] = messageText.split(/\W/g).filter(word => word !== '')
+
+  const operationStatus = await removeFromDb({
     db: database,
-    item: { username },
+    item: { userName },
     uniqueFieldName: 'username',
     collectionName: 'users'
   })
+
+  console.log('userRemove ', operationStatus)
 }
 
 module.exports = userRemove
