@@ -23,7 +23,7 @@ const descriptionHandler = Telegraf.on('text', async (ctx) => {
       author: ctx.message?.chat,
       database,
     })
-    await ctx.reply('Сохранено!')
+    await ctx.reply('Сохранено!', Markup.removeKeyboard())
   } catch (error) {
     console.log(error)
   }

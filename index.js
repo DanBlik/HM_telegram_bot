@@ -6,11 +6,11 @@ const userCommandsScene = require('./scenes/userCommandsScene')
 const addUserScene = require('./scenes/addUserScene')
 const removeUserScene = require('./scenes/removeUserScene')
 const removeSprintNameScene = require('./scenes/removeSprintNameScene')
+const startPollScene = require('./scenes/startPollScene')
 
 const read = require('./db/read')
 
 const list = require('./handlers/list')
-const poll = require('./handlers/poll')
 
 const getBotToken = require('./tokenBot/getBotToken')
 
@@ -40,7 +40,18 @@ bot.use((ctx, next) => {
 bot.start((ctx) => ctx.reply(MESSAGES.start))
 bot.help((ctx) => ctx.replyWithHTML(MESSAGES.help.user))
 
-bot.command('list', async (ctx) => list({ ctx, database }))
+const stage = new Stage([
+  addSprintNameScene,
+  userCommandsScene,
+  addUserScene,
+  removeUserScene,
+  removeSprintNameScene,
+  startPollScene,
+])
+stage.hears('exit', (ctx) => ctx.scene.leave())
+bot.use(session(), stage.middleware())
+
+bot.command('/list', async (ctx) => list({ ctx, database }))
 
 bot.command('/add', async (ctx) => {
   try {
@@ -61,7 +72,14 @@ bot.use(async (ctx, next) => {
   }
 })
 
-bot.command('poll', async (ctx) => poll({ ctx, db: database }))
+bot.command('/poll', async (ctx) => {
+  try {
+    await ctx.scene.enter('startPollScene')
+  } catch (e) {
+    console.log('cant start poll', e)
+  }
+})
+
 
 /*-------------admin block----------------*/
 
@@ -71,17 +89,6 @@ bot.use((ctx, next) => {
     next()
   }
 })
-
-const stage = new Stage([
-  addSprintNameScene,
-  userCommandsScene,
-  addUserScene,
-  removeUserScene,
-  removeSprintNameScene,
-])
-stage.hears('exit', (ctx) => ctx.scene.leave())
-
-bot.use(session(), stage.middleware())
 
 bot.command('/user', async (ctx) => {
   try {
