@@ -18,7 +18,7 @@ const MESSAGES = require('./messages')
 
 const database = require('./firebase')
 
-const { URL, NODE_ENV } = process.env
+const { URL, NODE_ENV, BOT_TOKEN_PROD } = process.env
 const PORT = process.env.PORT || 5000
 
 const bot = new Telegraf(getBotToken(process.env))
@@ -108,7 +108,7 @@ bot.command('/remove', async (ctx) => {
 if (NODE_ENV === 'production') {
   bot.launch({
     webhook: {
-      domain: `${URL}/bot-${BOT_TOKEN}`,
+      domain: `${URL}/bot-${BOT_TOKEN_PROD}`,
       port: PORT
     }
   })
