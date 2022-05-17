@@ -2,9 +2,9 @@ const read = require('../db/read')
 
 const startPolling = async ({ ctx, db }) => {
   // test chat
-  const chatId = -792421822
+  // const chatId = -792421822
   // HM chat
-  // const chatId = -1001261652329
+  const chatId = -1001261652329
   // const chatId = ctx.message.chat.id
   const pollName = 'Голосуем за название спринта:'
   const sprintNames = await read({ db, collectionName: 'sprintNames' })
