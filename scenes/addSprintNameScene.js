@@ -16,12 +16,17 @@ const descriptionHandler = Telegraf.on('text', async (ctx) => {
   console.log(ctx.scene.state.sprintName + ' ' + ctx.message.text)
 
   try {
-    await add({
+    const status = await add({
       name: ctx.scene.state.sprintName,
       description: ctx.message.text,
       author: ctx.message?.chat,
     })
-    await ctx.reply('Сохранено!', Markup.removeKeyboard())
+
+    if (status === 'success') {
+      await ctx.reply('Сохранено!', Markup.removeKeyboard())
+    } else {
+      await ctx.reply('Что-то пошло не так, возможно такое название уже существует. Проверьте уникальность через команду "/list", либо повторите позже.', Markup.removeKeyboard())
+    }
   } catch (error) {
     console.log(error)
   }

@@ -11,6 +11,8 @@ const userAdd = async ({ userName, group }) => {
   })
 
   console.log('userAdd ', operationStatus)
+
+  return operationStatus
 }
 
 module.exports = userAdd

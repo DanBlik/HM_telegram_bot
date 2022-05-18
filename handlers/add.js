@@ -12,6 +12,8 @@ const add = async ({ name, description, author }) => {
   })
 
   console.log('add ', operationStatus)
+
+  return operationStatus
 }
 
 module.exports = add

@@ -22,7 +22,7 @@ const create = async ({ item, uniqueFieldName, collectionName }) => {
   if (isUniq) {
     const postListRef = ref(database, collectionName);
     const newPostRef = push(postListRef);
-    console.log({newPostRef, postListRef});
+
     set(newPostRef, item)
       .then(() => {
         console.log('Data saved successfully!')
