@@ -1,18 +1,18 @@
 const { Telegraf, Scenes: { WizardScene }, Markup } = require('telegraf')
 
-const database = require('../firebase')
 const remove = require('../handlers/remove')
 
 const exit_keyboard = Markup.keyboard(['exit']).oneTime()
 
 const sprintNameHandler = Telegraf.on('text', async (ctx) => {
   try {
-    await remove({
-      name: ctx.message.text,
-      database,
-    })
+    const status = await remove({ name: ctx.message.text })
 
-    await ctx.reply(`${ctx.message.text} удален!`, Markup.removeKeyboard())
+    if (status === 'succes') {
+      await ctx.reply(`${ctx.message.text} удален!`, Markup.removeKeyboard())
+    } else {
+      await ctx.reply('Что-то пошло не так, возможно такое название не существует. Проверьте правильность ввода, либо повторите позже.', Markup.removeKeyboard())
+    }
   } catch (error) {
     console.log(error)
   }

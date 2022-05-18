@@ -1,7 +1,8 @@
-const { ref, child, get, remove } = require("firebase/database");
+const { ref, child, get, remove } = require('firebase/database')
+const database = require('../firebase')
 
-const removeItem = async ({ db, collectionName, item, uniqueFieldName }) => {
-  const dbRef = ref(db)
+const removeItem = async ({ collectionName, item, uniqueFieldName }) => {
+  const dbRef = ref(database)
 
   const itemKey = await get(child(dbRef, collectionName))
     .then((snapshot) => {
@@ -24,15 +25,21 @@ const removeItem = async ({ db, collectionName, item, uniqueFieldName }) => {
     });
 
   if (itemKey) {
-    const currentItemRef = ref(db, `${collectionName}/${itemKey}`)
-    remove(currentItemRef)
+    const currentItemRef = ref(database, `${collectionName}/${itemKey}`)
+    const status = await remove(currentItemRef)
       .then(() => {
         console.log('Data delete successfully!')
+        return 'success'
       })
       .catch((error) => {
         console.log('The delete failed...')
+        return 'failed'
       });
+
+    return status
   }
+
+  return 'failed'
 }
 
 module.exports = removeItem

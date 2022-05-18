@@ -1,17 +1,14 @@
 const removeFromDb = require('../db/remove')
 
-const remove = async ({ name, database }) => {
-  // const messageText = ctx.message.text
-  // const [, name] = messageText.split(/\W/g).filter(word => word !== '')
-
+const remove = async ({ name }) => {
   const operationStatus = await removeFromDb({
-    db: database,
     item: { name },
     uniqueFieldName: 'name',
     collectionName: 'sprintNames'
   })
 
   console.log('userAdd ', operationStatus)
+  return operationStatus
 }
 
 module.exports = remove
