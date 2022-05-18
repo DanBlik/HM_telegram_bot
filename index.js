@@ -16,8 +16,6 @@ const getBotToken = require('./tokenBot/getBotToken')
 
 const MESSAGES = require('./messages')
 
-const database = require('./firebase')
-
 const { URL, NODE_ENV, BOT_TOKEN_PROD } = process.env
 const PORT = process.env.PORT || 5000
 
@@ -27,7 +25,9 @@ const bot = new Telegraf(getBotToken(process.env))
 bot.on('edited_message', () => { })
 
 // bot.on('poll', (ctx) => {
-
+//   if (ctx.update.poll.is_closed === true) {
+//     console.log(ctx.update)
+//   }
 // })
 
 // работаем только с личными чатами
@@ -51,7 +51,7 @@ const stage = new Stage([
 stage.hears('exit', (ctx) => ctx.scene.leave())
 bot.use(session(), stage.middleware())
 
-bot.command('/list', async (ctx) => list({ ctx, database }))
+bot.command('/list', async (ctx) => list({ ctx }))
 
 bot.command('/add', async (ctx) => {
   try {
@@ -64,7 +64,7 @@ bot.command('/add', async (ctx) => {
 /*-------------admin block----------------*/
 
 bot.use(async (ctx, next) => {
-  const userList = await read({ db: database, collectionName: 'users' })
+  const userList = await read({ collectionName: 'users' })
   const isCurrentUserAdmin = userList?.find(({ username, group }) => username === ctx.message.chat.username && group === 'admin')
 
   if (isCurrentUserAdmin) {

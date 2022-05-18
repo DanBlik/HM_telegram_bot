@@ -11,10 +11,10 @@ const getCurrentChatId = () => {
   return -792421822
 }
 
-const startPolling = async ({ ctx, db, timer }) => {
+const startPolling = async ({ ctx, timer }) => {
   const chatId = getCurrentChatId()
   const pollName = 'Голосуем за название спринта:'
-  const sprintNames = await read({ db, collectionName: 'sprintNames' })
+  const sprintNames = await read({ collectionName: 'sprintNames' })
   const options = sprintNames?.map(sprintName => sprintName.name)
   const pollObject = await ctx.telegram.sendPoll(chatId, pollName, options)
 

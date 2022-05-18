@@ -1,7 +1,6 @@
 const { Telegraf, Scenes: { WizardScene }, Markup } = require('telegraf')
 
-const database = require('../firebase')
-const getUsersList = require('../handlers/getUsersList')
+const read = require('../db/read')
 
 const btn_keyboard = Markup.keyboard(['/addUser', '/removeUser', '/usersList', 'exit']).oneTime()
 
@@ -14,7 +13,7 @@ const commandsChooseHandler = Telegraf.on('text', async (ctx) => {
     case '/removeUser':
       return await ctx.scene.enter('removeUserScene')
     case '/usersList':
-      const users = await getUsersList({ database })
+      const users = await read({ collectionName: 'users' })
 
       if (users.length !== 0) {
         ctx.replyWithHTML(users.map(({ username, group }) => `<b>${username}|group: ${group}</b>`).join('\n'), Markup.removeKeyboard())

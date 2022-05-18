@@ -1,6 +1,5 @@
 const { Telegraf, Scenes: { WizardScene }, Markup } = require('telegraf')
 
-const database = require('../firebase')
 const startPolling = require('../helpers/startPolling')
 
 const exit_keyboard = Markup.keyboard(['exit']).oneTime()
@@ -15,7 +14,7 @@ const timerHandler = Telegraf.on('text', async (ctx) => {
   }
 
   try {
-    await startPolling({ ctx, db: database, timer: time })
+    await startPolling({ ctx, timer: time })
     ctx.reply(`Голосование запущенно на ${time} минут!`, Markup.removeKeyboard())
   } catch (error) {
     console.log(error)
