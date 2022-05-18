@@ -1,6 +1,5 @@
 const { Telegraf, Scenes: { WizardScene }, Markup } = require('telegraf')
 
-const database = require('../firebase')
 const add = require('../handlers/add')
 
 const exit_keyboard = Markup.keyboard(['exit']).oneTime()
@@ -21,7 +20,6 @@ const descriptionHandler = Telegraf.on('text', async (ctx) => {
       name: ctx.scene.state.sprintName,
       description: ctx.message.text,
       author: ctx.message?.chat,
-      database,
     })
     await ctx.reply('Сохранено!', Markup.removeKeyboard())
   } catch (error) {

@@ -1,8 +1,8 @@
-const { ref, set, child, get, push } = require("firebase/database");
+const { ref, set, child, get, push } = require('firebase/database')
+const database = require('../firebase')
 
-const create = async ({ db, item, uniqueFieldName, collectionName }) => {
-  console.log({ db, item, uniqueFieldName, collectionName });
-  const dbRef = ref(db)
+const create = async ({ item, uniqueFieldName, collectionName }) => {
+  const dbRef = ref(database)
 
   const isUniq = await get(child(dbRef, collectionName))
     .then((snapshot) => {
@@ -20,7 +20,7 @@ const create = async ({ db, item, uniqueFieldName, collectionName }) => {
     });
 
   if (isUniq) {
-    const postListRef = ref(db, collectionName);
+    const postListRef = ref(database, collectionName);
     const newPostRef = push(postListRef);
     console.log({newPostRef, postListRef});
     set(newPostRef, item)

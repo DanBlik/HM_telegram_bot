@@ -1,6 +1,5 @@
 const { Telegraf, Scenes: { WizardScene }, Markup } = require('telegraf')
 
-const database = require('../firebase')
 const userAdd = require('../handlers/userAdd')
 
 const exit_keyboard = Markup.keyboard(['exit']).oneTime()
@@ -20,7 +19,6 @@ const groupHandler = Telegraf.on('text', async (ctx) => {
     await userAdd({
       userName: ctx.scene.state.userName,
       group: ctx.message.text,
-      database,
     })
     await ctx.reply('Пользователь сохранен!')
   } catch (error) {
