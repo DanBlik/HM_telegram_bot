@@ -1,7 +1,8 @@
-const { ref, child, get, update } = require("firebase/database");
+const { ref, child, get, update } = require('firebase/database')
+const database = require('../firebase')
 
-const update = async ({ db, item, uniqueFieldName, updateItem, collectionName }) => {
-  const dbRef = ref(db)
+const updateInDb = async ({ item, uniqueFieldName, updateItem, collectionName }) => {
+  const dbRef = ref(database)
 
   const itemKey = await get(child(dbRef, collectionName))
     .then((snapshot) => {
@@ -23,7 +24,7 @@ const update = async ({ db, item, uniqueFieldName, updateItem, collectionName })
     });
 
   if (itemKey) {
-    const currentItemRef = ref(db, `${collectionName}/${itemKey}`)
+    const currentItemRef = ref(database, `${collectionName}/${itemKey}`)
 
     update(currentItemRef, updateItem)
       .then(() => {
@@ -37,4 +38,4 @@ const update = async ({ db, item, uniqueFieldName, updateItem, collectionName })
   }
 }
 
-module.exports = update
+module.exports = updateInDb
