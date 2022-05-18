@@ -17,7 +17,7 @@ const startPolling = async ({ ctx, db, timer }) => {
   const sprintNames = await read({ db, collectionName: 'sprintNames' })
   const options = sprintNames?.map(sprintName => sprintName.name)
   const pollObject = await ctx.telegram.sendPoll(chatId, pollName, options)
-  console.log(pollObject)
+
   if (!Number.isNaN(timer)) {
     setTimeout(() => {
       ctx.telegram.stopPoll(chatId, pollObject.message_id)

@@ -12,7 +12,7 @@ const sprintNameHandler = Telegraf.on('text', async (ctx) => {
       database,
     })
 
-    await ctx.reply(`${ctx.message.text} удален!`)
+    await ctx.reply(`${ctx.message.text} удален!`, Markup.removeKeyboard())
   } catch (error) {
     console.log(error)
   }

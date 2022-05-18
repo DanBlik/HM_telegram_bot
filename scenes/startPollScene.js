@@ -6,16 +6,17 @@ const startPolling = require('../helpers/startPolling')
 const exit_keyboard = Markup.keyboard(['exit']).oneTime()
 
 const timerHandler = Telegraf.on('text', async (ctx) => {
-  const time = parseInt(ctx.message.text, 10)
+  const time = parseFloat(ctx.message.text)
 
   if (Object.is(time, NaN)) {
-    ctx.reply('Неверный формат ввода!')
+    ctx.reply('Неверный формат ввода!', Markup.removeKeyboard())
 
     return ctx.scene.leave()
   }
 
   try {
     await startPolling({ ctx, db: database, timer: time })
+    ctx.reply(`Голосование запущенно на ${time} минут!`, Markup.removeKeyboard())
   } catch (error) {
     console.log(error)
   }
