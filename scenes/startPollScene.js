@@ -14,8 +14,15 @@ const timerHandler = Telegraf.on('text', async (ctx) => {
   }
 
   try {
-    await startPolling({ ctx, timer: time })
+    const status = await startPolling({ ctx, timer: time })
+
+    if (status === 'empty') {
+      ctx.reply('Список для голосования пуст!', Markup.removeKeyboard())
+
+      return ctx.scene.leave()
+    }
     ctx.reply(`Голосование запущенно на ${time} минут!`, Markup.removeKeyboard())
+    
   } catch (error) {
     console.log(error)
   }
