@@ -8,7 +8,7 @@ const sprintNameHandler = Telegraf.on('text', async (ctx) => {
   try {
     const status = await remove({ name: ctx.message.text })
 
-    if (status === 'succes') {
+    if (status === 'success') {
       await ctx.reply(`${ctx.message.text} удален!`, Markup.removeKeyboard())
     } else {
       await ctx.reply('Что-то пошло не так, возможно такое название не существует. Проверьте правильность ввода, либо повторите позже.', Markup.removeKeyboard())

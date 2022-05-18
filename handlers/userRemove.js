@@ -1,8 +1,8 @@
 const removeFromDb = require('../db/remove')
 
-const userRemove = async ({ userName }) => {
+const userRemove = async ({ username }) => {
   const operationStatus = await removeFromDb({
-    item: { userName },
+    item: { username },
     uniqueFieldName: 'username',
     collectionName: 'users'
   })
