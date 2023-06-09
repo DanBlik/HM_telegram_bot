@@ -1,7 +1,8 @@
-const { ref, child, get } = require("firebase/database");
+const { ref, child, get } = require('firebase/database')
+const database = require('../firebase')
 
-const read = async ({ db, collectionName }) => {
-  const dbRef = ref(db)
+const read = async ({ collectionName }) => {
+  const dbRef = ref(database)
   return await get(child(dbRef, collectionName))
     .then((snapshot) => {
       if (snapshot.exists()) {
@@ -11,7 +12,7 @@ const read = async ({ db, collectionName }) => {
     })
     .catch((error) => {
       console.error(error);
-    });
+    })
 }
 
 module.exports = read

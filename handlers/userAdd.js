@@ -1,11 +1,7 @@
 const create = require('../db/create')
 
-const userAdd = async ({ userName, group, database }) => {
-  // const messageText = ctx.message.text
-  // const [, userName, group] = messageText.split(/\W/g).filter(word => word !== '')
-
+const userAdd = async ({ userName, group }) => {
   const operationStatus = await create({
-    db: database,
     item: {
       username: userName,
       group,
@@ -15,7 +11,8 @@ const userAdd = async ({ userName, group, database }) => {
   })
 
   console.log('userAdd ', operationStatus)
-  // ctx.reply(operationStatus === 'success' ? 'Пользователь добавлен.' : 'Такой пользователь уже есть в списке.')
+
+  return operationStatus
 }
 
 module.exports = userAdd
