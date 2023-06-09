@@ -1,35 +1,26 @@
-const { Telegraf, Scenes: { WizardScene }, Markup } = require('telegraf')
+const {
+  Telegraf,
+  Scenes: { WizardScene },
+  Markup,
+} = require("telegraf");
 
-const read = require('../db/read')
+const read = require("../db/read");
 
-const database = require('../firebase')
-const add = require('../handlers/add')
+const database = require("../firebase");
+const add = require("../handlers/add");
 
-const exit_keyboard = Markup.keyboard(['exit']).oneTime()
+const exit_keyboard = Markup.keyboard(["exit"]).oneTime();
 
-const sprintNameHandler = Telegraf.on('text', async (ctx) => {
-  try {
-    const sprintNamesList = await read({ db: database, collectionName: 'sprintNames' })
-    if (sprintNamesList.length > 9) {
-      ctx.reply('Извините, в базе уже есть 10 названий')
-      return
-    }
-  } catch (error) {
-    ctx.reply('Извините, произошла ошибка при получении списка названий, попробуйте позже.')
-    console.log(error)
-    return
-  }
+const sprintNameHandler = Telegraf.on("text", async (ctx) => {
+  ctx.scene.state.sprintName = ctx.message.text;
 
+  await ctx.reply("Введите описание названия:", exit_keyboard);
 
-  ctx.scene.state.sprintName = ctx.message.text
+  return ctx.wizard.next();
+});
 
-  await ctx.reply('Введите описание названия:', exit_keyboard)
-
-  return ctx.wizard.next()
-})
-
-const descriptionHandler = Telegraf.on('text', async (ctx) => {
-  console.log(ctx.scene.state.sprintName + ' ' + ctx.message.text)
+const descriptionHandler = Telegraf.on("text", async (ctx) => {
+  console.log(ctx.scene.state.sprintName + " " + ctx.message.text);
 
   try {
     await add({
@@ -37,16 +28,39 @@ const descriptionHandler = Telegraf.on('text', async (ctx) => {
       description: ctx.message.text,
       author: ctx.message?.chat,
       database,
-    })
-    await ctx.reply('Сохранено!', Markup.removeKeyboard())
+    });
+    await ctx.reply("Сохранено!", Markup.removeKeyboard());
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 
-  return ctx.scene.leave()
-})
+  return ctx.scene.leave();
+});
 
-const addSprintNameScene = new WizardScene('addSprintNameScene', sprintNameHandler, descriptionHandler)
-addSprintNameScene.enter((ctx) => ctx.reply('Введите новое название спринта:', exit_keyboard))
+const addSprintNameScene = new WizardScene(
+  "addSprintNameScene",
+  sprintNameHandler,
+  descriptionHandler
+);
+addSprintNameScene.enter(async (ctx) => {
+  try {
+    const sprintNamesList = await read({
+      db: database,
+      collectionName: "sprintNames",
+    });
+    if (sprintNamesList.length > 9) {
+      ctx.reply("Извините, в базе уже есть 10 названий");
+      return ctx.scene.leave();
+    }
+  } catch (error) {
+    ctx.reply(
+      "Извините, произошла ошибка при получении списка названий, попробуйте позже."
+    );
+    console.log(error);
+    return ctx.scene.leave();
+  }
 
-module.exports = addSprintNameScene
+  ctx.reply("Введите новое название спринта:", exit_keyboard);
+});
+
+module.exports = addSprintNameScene;
