@@ -1,11 +1,26 @@
 const { Telegraf, Scenes: { WizardScene }, Markup } = require('telegraf')
 
+const read = require('../db/read')
+
 const database = require('../firebase')
 const add = require('../handlers/add')
 
 const exit_keyboard = Markup.keyboard(['exit']).oneTime()
 
 const sprintNameHandler = Telegraf.on('text', async (ctx) => {
+  try {
+    const sprintNamesList = await read({ db: database, collectionName: 'sprintNames' })
+    if (sprintNamesList.length > 9) {
+      ctx.reply('Извините, в базе уже есть 10 названий')
+      return
+    }
+  } catch (error) {
+    ctx.reply('Извините, произошла ошибка при получении списка названий, попробуйте позже.')
+    console.log(error)
+    return
+  }
+
+
   ctx.scene.state.sprintName = ctx.message.text
 
   await ctx.reply('Введите описание названия:', exit_keyboard)
