@@ -4,4 +4,4 @@ const formatInput = (inputText) =>
     .map((word) => word.replace("/", ""))
     .join(" ");
 
-export default formatInput;
+module.exports = formatInput

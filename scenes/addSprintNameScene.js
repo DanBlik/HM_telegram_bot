@@ -9,6 +9,8 @@ const read = require("../db/read");
 const database = require("../firebase");
 const add = require("../handlers/add");
 
+const formatInput = require('../helpers/formatInput')
+
 const exit_keyboard = Markup.keyboard(["exit"]).oneTime();
 
 const sprintNameHandler = Telegraf.on("text", async (ctx) => {
