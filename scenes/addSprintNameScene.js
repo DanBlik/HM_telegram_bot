@@ -13,21 +13,20 @@ const formatInput = require('../helpers/formatInput')
 
 const exit_keyboard = Markup.keyboard(["exit"]).oneTime();
 
-const sprintNameHandler = Telegraf.on("text", async (ctx) => {
-  ctx.scene.state.sprintName = formatInput(ctx.message.text);
+// const sprintNameHandler = Telegraf.on("text", async (ctx) => {
+//   ctx.scene.state.sprintName = formatInput(ctx.message.text);
 
-  await ctx.reply("Введите описание названия:", exit_keyboard);
+//   await ctx.reply("Введите описание названия:", exit_keyboard);
 
-  return ctx.wizard.next();
-});
+//   return ctx.wizard.next();
+// });
 
 const descriptionHandler = Telegraf.on("text", async (ctx) => {
   console.log(ctx.scene.state.sprintName + " " + ctx.message.text);
 
   try {
     await add({
-      name: ctx.scene.state.sprintName,
-      description: ctx.message.text,
+      name: ctx.message.text,
       author: ctx.message?.chat,
       database,
     });
@@ -41,14 +40,13 @@ const descriptionHandler = Telegraf.on("text", async (ctx) => {
 
 const addSprintNameScene = new WizardScene(
   "addSprintNameScene",
-  sprintNameHandler,
   descriptionHandler
 );
 addSprintNameScene.enter(async (ctx) => {
-  // бан ии
-  if (ctx.message?.chat.id == '53141560' || ctx.message?.chat.id == '121619185') {
-    return ctx.scene.leave();
-  }
+
+  // if (ctx.message?.chat.id == '53141560' || ctx.message?.chat.id == '121619185') {
+  //   return ctx.scene.leave();
+  // }
 
   try {
     const sprintNamesList = await read({
