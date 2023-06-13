@@ -8,7 +8,7 @@ const add = async ({ name, description, author, database }) => {
     db: database,
     item: {
       name,
-      description,
+      // description,
       author,
       // author: ctx.message?.chat,
     },
